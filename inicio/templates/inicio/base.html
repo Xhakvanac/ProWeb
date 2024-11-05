@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    {% load static %}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Mi Sitio{% endblock %}</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20,200,0,-25&icon_names=menu" />
+    <link rel="stylesheet" href="{% static 'css/main.css' %}">
+</head>
+
+<body>
+    <div class="container">
+        <button><span class="material-symbols-outlined">menu</span></button>
+        <!-- Header -->
+        <header>
+            <h1>Mi Sitio</h1>
+            {% block header %}
+            {% endblock %}
+        </header>
+        <!-- Nav -->
+        <nav>
+            <ul>
+                <li><a href="{% url 'inicio' %}">Inicio</a></li>
+                <li><a href="#">Página Informativa 1</a></li>
+                <li><a href="#">Página Informativa 2</a></li>
+                <li>
+                    {% if user.is_authenticated %}
+                        <a href="{% url 'comentarios' %}">Comentarios</a>
+                    {% else %}
+                        <span style="color: gray; cursor: not-allowed;">Comentarios</span>
+                    {% endif %}
+                </li>
+                {% if user.is_authenticated %}
+                    <form action="{% url 'logout' %}" method="post" style="display: inline;">
+                        {% csrf_token %}
+                        <button type="submit">Cerrar Sesión {{ user.username }}</button>
+                    </form>
+                {% else %}
+                    <li><a href="#" id="loginBtn">Iniciar Sesión</a></li>
+                {% endif %}
+            </ul>
+        </nav>
+        <label class="ui-switch">
+            <input type="checkbox" id="darkModeToggle" aria-label="Toggle Dark Mode">
+            <div class="slider">
+              <div class="circle"></div>
+            </div>
+        </label>
+        <!-- Modales para autenticación -->
+        {% block modals %}
+        {% endblock %}
+        <!-- Main Content -->
+        <main>
+            {% block content %}
+            {% endblock %}
+        </main>
+        <!-- Footer sass styles/main.scss inicio/static/css/main.css --watch-->
+        <footer>
+            <p>&copy; 2024 Mi Sitio. Todos los derechos reservados.</p>
+        </footer>
+    </div>
+    <script src="{% static 'js/scripts.js' %}"></script>
+</body>
+</html>

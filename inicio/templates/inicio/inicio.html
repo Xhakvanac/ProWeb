@@ -1,0 +1,131 @@
+{% extends 'inicio/base.html' %}
+
+
+{% block title %}Inicio{% endblock %}
+
+
+{% block content %}
+    <h2>Bienvenido a la página de inicio</h2>
+    {% if user.is_authenticated %}
+        <!-- Formulario de contacto para usuarios autenticados -->
+        <h3>Formulario de Contacto</h3>
+        <form method="post" action="{% url 'contacto' %}">
+            {% csrf_token %}
+            {{ contacto_form.as_p }}
+            <button type="submit">Enviar</button>
+        </form>
+        <!-- Botón para mostrar/ocultar registros -->
+        <button id="toggle-registros">Mostrar registros</button>
+        <div id="registros-container" style="display: none;">
+            <h3>Registros Enviados</h3>
+            {% if registros %}
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Nombre</th>
+                            <th>Edad</th>
+                            <th>Color Favorito</th>
+                            <th>Fecha de Captura</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for registro in registros %}
+                            <tr>
+                                <td>{{ registro.nombre }}</td>
+                                <td>{{ registro.edad }}</td>
+                                <td>{{ registro.color_favorito }}</td>
+                                <td>{{ registro.fecha_captura }}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            {% else %}
+                <p>No hay registros enviados.</p>
+            {% endif %}
+        </div>
+        <script>
+            // JavaScript para mostrar u ocultar los registros
+            document.getElementById('toggle-registros').addEventListener('click', function() {
+                const container = document.getElementById('registros-container');
+                if (container.style.display === 'none') {
+                    container.style.display = 'block';
+                    this.textContent = 'Ocultar registros';
+                } else {
+                    container.style.display = 'none';
+                    this.textContent = 'Mostrar registros';
+                }
+            });
+        </script>
+    {% else %}
+        <p>Debes iniciar sesión para acceder al formulario de contacto.</p>
+    {% endif %}
+{% endblock %}
+
+
+
+{% block modals %}
+    <!-- Modal de inicio de sesión -->
+    <div id="loginModal" class="modal" style="display: none;">
+        <div class="modal-content">
+          <h3>Iniciar Sesión</h3>
+          <form method="post" action="{% url 'login' %}">
+            {% csrf_token %}
+            {{ login_form.as_p }}
+            <button type="submit">Iniciar Sesión</button>
+          </form>
+          <button id="registerBtn" class="secondary-btn">¿No tienes cuenta? Regístrate aquí</button>
+        </div>
+    </div>
+    <!-- Modal de registro -->
+    <div id="registerModal" class="modal" style="display: none;">
+        <div class="modal-content">
+          <h3>Registro</h3>
+          <form method="post" action="{% url 'registro' %}">
+            {% csrf_token %}
+            {{ register_form.as_p }}
+            <button type="submit">Registrarse</button>
+          </form>
+          <button id="backToLoginBtn" class="secondary-btn">¿Ya tienes cuenta? Inicia Sesión</button>
+        </div>
+      </div>
+    <script>
+        // Abre el modal de inicio de sesión al hacer clic en el botón de navegación
+        document.getElementById('loginBtn').onclick = function(event) {
+            event.preventDefault();
+            document.getElementById('loginModal').style.display = 'block';
+        };
+        // Abre el modal de registro y cierra el de inicio de sesión al hacer clic en "¿No tienes cuenta? Regístrate aquí"
+        document.getElementById('registerBtn').onclick = function(event) {
+            event.preventDefault();
+            document.getElementById('loginModal').style.display = 'none';
+            document.getElementById('registerModal').style.display = 'block';
+        };
+        // Abre el modal de inicio de sesión y cierra el de registro al hacer clic en "¿Ya tienes cuenta? Inicia Sesión"
+        document.getElementById('backToLoginBtn').onclick = function(event) {
+            event.preventDefault();
+            document.getElementById('registerModal').style.display = 'none';
+            document.getElementById('loginModal').style.display = 'block';
+        };
+        // Cierra el modal al hacer clic fuera de él
+        window.onclick = function(event) {
+            var loginModal = document.getElementById('loginModal');
+            var registerModal = document.getElementById('registerModal');
+            if (event.target == loginModal) {
+                loginModal.style.display = 'none';
+            }
+            if (event.target == registerModal) {
+                registerModal.style.display = 'none';
+            }
+        };
+    </script>
+{% endblock %}
+
+
+
+<!-- inicio.html -->
+{% if messages %}
+    {% for message in messages %}
+        <div class="message {{ message.tags }}">{{ message }}</div>
+    {% endfor %}
+{% endif %}
+

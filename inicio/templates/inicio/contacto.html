@@ -1,0 +1,58 @@
+<!-- contacto.html -->
+{% extends 'inicio/base.html' %}
+
+{% block title %}Formulario de Contacto{% endblock %}
+
+{% block content %}
+    {% if user.is_authenticated %}
+        <h2>Formulario de Contacto</h2>
+        <form method="post" action="{% url 'contacto' %}">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit">Enviar</button>
+        </form>
+        <button id="toggle-registros">Mostrar registros</button>
+        <div id="registros-container" style="display: none;">  <!-- Contenedor para los registros -->
+            <h3>Registros Enviados</h3>
+            {% if registros %}
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Nombre</th>
+                            <th>Edad</th>
+                            <th>Color Favorito</th>
+                            <th>Fecha de Captura</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for registro in registros %}
+                            <tr>
+                                <td>{{ registro.nombre }}</td>
+                                <td>{{ registro.edad }}</td>
+                                <td>{{ registro.color_favorito }}</td>
+                                <td>{{ registro.fecha_captura }}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            {% else %}
+                <p>No hay registros enviados.</p>
+            {% endif %}
+        </div>
+        <script>
+            // JavaScript para mostrar u ocultar los registros
+            document.getElementById('toggle-registros').addEventListener('click', function() {
+                const container = document.getElementById('registros-container');
+                if (container.style.display === 'none') {
+                    container.style.display = 'block';
+                    this.textContent = 'Ocultar registros';  // Cambia el texto del botón
+                } else {
+                    container.style.display = 'none';
+                    this.textContent = 'Mostrar registros';  // Cambia el texto del botón
+                }
+            });
+        </script>
+    {% else %}
+        <p>Debes iniciar sesión para acceder al formulario de contacto.</p>
+    {% endif %}
+{% endblock %}

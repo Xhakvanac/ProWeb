@@ -1,0 +1,20 @@
+// Variables de colores
+$primary-color: #3498db;
+$secondary-color: #2ecc71;
+$background-color-light: #ffffff;
+$text-color-light: #333333;
+$background-color-dark: #333333;
+$text-color-dark: #ffffff;
+$color-light-bg: #ffffff;
+$color-light-text: #000000;
+$color-dark-bg: #121212;
+$color-dark-text: #ffffff;
+
+// Variables de layout
+$spacing: 1rem;
+$nav-height: 60px;
+$header-height: 80px;$modal-bg-color: rgba(0, 0, 0, 0.6);
+$modal-content-bg: #ffffff;
+$button-bg: $primary-color;
+$button-hover-bg: darken($primary-color, 10%);
+$button-text-color: #fff;
